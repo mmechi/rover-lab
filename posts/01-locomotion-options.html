@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>#01 Locomotion System Selection - Rover Lab</title>
+<meta name="description" content="A personal Pugh matrix comparing wheeled, tracked, legged and hybrid locomotion systems for an outdoor rover build.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;500;600&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --bg2: #13161e;
+    --bg3: #1a1e28;
+    --border: #232839;
+    --border2: #2e3448;
+    --text: #e8eaf0;
+    --text2: #9ba2bc;
+    --text3: #737a96;
+    --accent: #4f8ef7;
+    --accent2: #1a3a7a;
+    --amber: #f0a940;
+    --green: #3ecf7a;
+    --red: #fb7185;
+    --purple: #c778dd;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Sora', sans-serif;
+    --serif: 'Playfair Display', serif;
+    --r: 6px;
+    --r2: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+  nav {
+    border-bottom: 1px solid var(--border);
+    background: rgba(13,15,20,0.92);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--text3); }
+
+  .nav-back {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text2);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-back:hover { color: var(--text); }
+
+  .post-header {
+    padding: 5rem 0 3rem;
+    border-bottom: 1px solid var(--border);
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .post-eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.25rem;
+  }
+
+  .post-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text3);
+  }
+
+  .post-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 2px 10px;
+    border-radius: 99px;
+    border: 1px solid;
+    color: var(--amber);
+    border-color: rgba(240,169,64,0.35);
+    background: rgba(240,169,64,0.07);
+  }
+
+  .post-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    margin-left: auto;
+  }
+
+  .post-header h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 900;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+
+  .post-header h1 em { font-style: normal; color: var(--accent); }
+
+  .post-intro {
+    font-size: 17px;
+    color: var(--text2);
+    max-width: 720px;
+    line-height: 1.85;
+  }
+
+  .post-body { padding: 3rem 0 2rem; }
+
+  .post-body p {
+    font-size: 17px;
+    color: var(--text2);
+    line-height: 1.9;
+    margin-bottom: 1.5rem;
+    max-width: 720px;
+  }
+
+  .post-body strong { color: var(--text); font-weight: 600; }
+
+  .post-body h2 {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin: 3rem 0 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Taxonomy grid */
+  .taxonomy-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--r2);
+    overflow: hidden;
+    margin: 2rem 0;
+  }
+
+  .taxonomy-card {
+    background: var(--bg2);
+    padding: 1.25rem 1.5rem;
+    position: relative;
+  }
+
+  .taxonomy-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+  }
+
+  .taxonomy-card.w::before { background: var(--accent); }
+  .taxonomy-card.t::before { background: var(--amber); }
+  .taxonomy-card.l::before { background: var(--purple); }
+  .taxonomy-card.hybrid::before { background: var(--text3); }
+
+  .taxonomy-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .taxonomy-card.w .taxonomy-label { color: var(--accent); }
+  .taxonomy-card.t .taxonomy-label { color: var(--amber); }
+  .taxonomy-card.l .taxonomy-label { color: var(--purple); }
+  .taxonomy-card.hybrid .taxonomy-label { color: var(--text3); }
+
+  .taxonomy-card h3 {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+  }
+
+  .taxonomy-card p {
+    font-size: 13px !important;
+    color: var(--text3) !important;
+    line-height: 1.6 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+
+  .taxonomy-hybrids {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+
+  /* Pugh matrix */
+  .pugh-wrap {
+    margin: 2rem 0;
+    overflow-x: auto;
+    border: 1px solid var(--border2);
+    border-radius: var(--r2);
+    background: var(--bg2);
+  }
+
+  .pugh-table {
+    width: 100%;
+    min-width: 700px;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  .pugh-table th {
+    background: var(--bg3);
+    color: var(--text2);
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border2);
+    border-right: 1px solid var(--border);
+    letter-spacing: 0.05em;
+    font-size: 11px;
+  }
+
+  .pugh-table th:first-child {
+    text-align: left;
+    min-width: 200px;
+  }
+
+  .pugh-table th.datum {
+    color: var(--accent);
+    border-left: 2px solid var(--accent);
+    border-right: 2px solid var(--accent);
+    background: rgba(79,142,247,0.08);
+  }
+
+  .pugh-table td {
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    color: var(--text2);
+    text-align: center;
+  }
+
+  .pugh-table td:first-child {
+    text-align: left;
+    color: var(--text);
+    font-size: 12px;
+  }
+
+  .pugh-table td.datum {
+    border-left: 2px solid var(--accent);
+    border-right: 2px solid var(--accent);
+    background: rgba(79,142,247,0.05);
+    color: var(--text3);
+    font-style: italic;
+  }
+
+  .pugh-table tr:last-child td { border-bottom: none; }
+
+  .pugh-table .weight {
+    font-size: 10px;
+    color: var(--text3);
+    display: block;
+  }
+
+  .cell-plus {
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  .cell-minus {
+    color: var(--red);
+    font-weight: 600;
+  }
+
+  .cell-dminus {
+    color: var(--red);
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .cell-same {
+    color: var(--text3);
+  }
+
+  .score-row td {
+    background: var(--bg3) !important;
+    border-top: 2px solid var(--border2) !important;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .score-row .datum {
+    border-left: 2px solid var(--accent) !important;
+    border-right: 2px solid var(--accent) !important;
+    background: rgba(79,142,247,0.08) !important;
+    color: var(--accent) !important;
+  }
+
+  .score-positive { color: var(--green) !important; }
+  .score-negative { color: var(--red) !important; }
+  .score-neutral  { color: var(--text2) !important; }
+
+  .pugh-legend {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .legend-item span {
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  /* callout box */
+  .callout {
+    border: 1px solid var(--border2);
+    border-left: 3px solid var(--accent);
+    background: rgba(79,142,247,0.05);
+    border-radius: var(--r);
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .callout p {
+    font-size: 15px !important;
+    color: var(--text2) !important;
+    margin: 0 !important;
+    line-height: 1.75 !important;
+  }
+
+  .callout p + p { margin-top: 0.75rem !important; }
+
+  /* figures */
+  .fig-wrap {
+    margin: 2.5rem 0;
+    border: 1px solid var(--border2);
+    border-radius: var(--r2);
+    background: var(--bg2);
+    overflow: hidden;
+  }
+
+  .fig-wrap img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .fig-caption {
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    line-height: 1.6;
+  }
+
+  .fig-caption a { color: var(--text3); }
+
+  /* references */
+  .references {
+    margin-top: 3rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .references h3 {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .references ol {
+    padding-left: 1.25rem;
+  }
+
+  .references li {
+    font-size: 13px;
+    color: var(--text3);
+    line-height: 1.7;
+    margin-bottom: 0.5rem;
+    font-family: var(--mono);
+  }
+
+  .references a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .references a:hover { text-decoration: underline; }
+
+  .post-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 2rem 0 4rem;
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  .post-nav a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .post-nav a.prev::before { content: '<-'; }
+  .post-nav a.next::after { content: '->'; }
+
+  footer { border-top: 1px solid var(--border); padding: 2rem 0; }
+
+  .footer-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-brand { font-family: var(--mono); font-size: 12px; color: var(--text3); }
+
+  .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+
+  .footer-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text3);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--text2); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 720px) {
+    .taxonomy-grid { grid-template-columns: 1fr; }
+    .taxonomy-hybrids { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">marco<span>.</span>rover_lab<span>()</span></a>
+    <a href="../index.html" class="nav-back">&larr; Back to journal</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="post-header">
+    <p class="post-eyebrow">// build journal - design analysis</p>
+    <div class="post-meta">
+      <span class="post-num">#01</span>
+      <span class="post-badge">Analysis</span>
+      <span class="post-date">May 2025</span>
+    </div>
+    <h1>Choosing the locomotion concept:<br><em>a personal Pugh matrix.</em></h1>
+    <p class="post-intro">
+      Before buying any motor, I spent time mapping the options.
+      Mobile robotics has produced a surprisingly wide range of locomotion systems,
+      each with clear strengths and real limitations. This post is my structured take
+      on which one belongs in Argo v1 - and why.
+    </p>
+  </div>
+
+  <div class="post-body">
+
+    <p>
+      The choice of locomotion system is arguably the single most consequential decision
+      in an outdoor mobile robot design. It determines the mechanical architecture,
+      the motor and actuator count, the firmware complexity, the energy consumption,
+      and ultimately the kind of terrain the robot can realistically operate in.
+      Getting it right at the concept phase avoids painful redesigns later.
+    </p>
+    <p>
+      The academic literature on this topic is extensive. Bruzzone and Quaglia (2012)
+      published a rigorous taxonomy and comparison of ground mobile robot locomotion
+      systems covering both research prototypes and commercial products <a href="#ref1">[1]</a>.
+      Their framework is the starting point for the analysis below, adapted to the
+      specific constraints of this build.
+    </p>
+
+    <h2>// the design space</h2>
+
+    <p>
+      Locomotion systems for ground robots can be grouped into three fundamental
+      categories - wheeled (W), tracked (T), and legged (L) - plus four hybrid
+      combinations of those. Each category has a characteristic profile of strengths
+      and weaknesses across mobility, efficiency, and complexity.
+    </p>
+
+    <div class="fig-wrap">
+      <img src="../img/locomotion-taxonomy.svg"
+           alt="Ground mobile robot taxonomy: W (wheeled), T (tracked), L (legged) and four hybrid categories LW, LT, WT, LWT"
+           loading="lazy" style="background:#0d0f14;">
+      <div class="fig-caption">
+        Fig. 1 - Ground mobile robot categories, adapted from Bruzzone &amp; Quaglia (2012),
+        <em>Mechanical Sciences</em>, 3, 49-62.
+        <a href="https://doi.org/10.5194/ms-3-49-2012" target="_blank" rel="noopener">doi:10.5194/ms-3-49-2012</a>
+        - CC BY 3.0. ARGO v1 highlighted in blue; tracked non-articulated (considered alternative) in amber.
+      </div>
+    </div>
+
+    <div class="taxonomy-grid">
+      <div class="taxonomy-card w">
+        <div class="taxonomy-label">W - Wheeled</div>
+        <h3>Wheeled robots</h3>
+        <p>High speed, high energy efficiency, simple mechanics. Limited obstacle crossing without articulated frames. The most common solution in structured and semi-structured environments. Includes differential, Ackermann, and skid-steering variants.</p>
+      </div>
+      <div class="taxonomy-card t">
+        <div class="taxonomy-label">T - Tracked</div>
+        <h3>Tracked robots</h3>
+        <p>Large ground contact area gives good traction on soft and uneven terrain. Differential steering only. Medium energy efficiency due to track friction. More mechanically complex than wheeled but very well proven in field applications.</p>
+      </div>
+      <div class="taxonomy-card l">
+        <div class="taxonomy-label">L - Legged</div>
+        <h3>Legged robots</h3>
+        <p>Maximum mobility in unstructured environments and step/stair climbing. High mechanical and control complexity. Low energy efficiency (especially static gait). Technology readiness lower than W and T for solo builders.</p>
+      </div>
+      <div class="taxonomy-hybrids">
+        <div class="taxonomy-card hybrid">
+          <div class="taxonomy-label">LW hybrid</div>
+          <h3>Leg-wheel</h3>
+          <p>Combines wheeled speed with legged obstacle capability. Complex actuation, but it's the candidate for the next upgrade.</p>
+        </div>
+        <div class="taxonomy-card hybrid">
+          <div class="taxonomy-label">LT hybrid</div>
+          <h3>Leg-track</h3>
+          <p>Articulated tracks provide extended mobility over obstacles. Used in field robots.</p>
+        </div>
+        <div class="taxonomy-card hybrid">
+          <div class="taxonomy-label">WT hybrid</div>
+          <h3>Wheel-track</h3>
+          <p>Variable-geometry tracks or wheel-track switching. Versatile but mechanically complex. High build effort.</p>
+        </div>
+        <div class="taxonomy-card hybrid">
+          <div class="taxonomy-label">LWT hybrid</div>
+          <h3>Leg-wheel-track</h3>
+          <p>Maximum versatility. Very high complexity. Research-level platforms only. Not realistic for a first build.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fig-wrap">
+      <img src="../img/bruzzone2012_table2_crop.png"
+           alt="Table 2 - Synthetic comparison of locomotion system features across W, T, L and hybrid categories"
+           loading="lazy">
+      <div class="fig-caption">
+        Table 2 - Synthetic comparison of locomotion system features. Source: Bruzzone &amp; Quaglia (2012),
+        <em>Mechanical Sciences</em>, 3, 49-62.
+        <a href="https://doi.org/10.5194/ms-3-49-2012" target="_blank" rel="noopener">doi:10.5194/ms-3-49-2012</a>
+        - CC BY 3.0
+      </div>
+    </div>
+
+    <h2>// criteria for this build</h2>
+
+    <p>
+      The taxonomy above is domain-agnostic. To make a decision, it needs to be
+      filtered through the specific requirements of this project. The mission - an
+      outdoor rover operating on uneven terrain (grass, gravel, light mud) - already
+      eliminates several options. The additional constraints narrow it further:
+    </p>
+    <p>
+      <strong>Build feasibility:</strong> the platform must be buildable by one person
+      using FDM-printed structural parts and off-the-shelf electronics. Mechanical
+      systems requiring precise machining, complex linkages, or non-standard actuators are
+      not compatible with this constraint.
+    </p>
+    <p>
+      <strong>Budget:</strong> the budget is deliberately tight. This forces
+      prioritisation and prevents the project from expanding into component territory
+      that would require a commercial sponsor.
+    </p>
+    <p>
+      <strong>Outdoor terrain performance:</strong> the rover must maintain traction
+      and directional stability on grass and loose gravel. This is not extreme terrain -
+      no step climbing, no soft mud, no slopes above 20 degrees - but it is not a flat
+      indoor floor either.
+    </p>
+    <p>
+      <strong>Control complexity:</strong> for v1, the firmware layer must stay
+      manageable for a single developer who is learning as the project progresses.
+      Every additional degree of freedom in the locomotion system adds complexity
+      to the control layer.
+    </p>
+    <p>
+      <strong>Field fault tolerance:</strong> the rover will be tested outdoors,
+      away from a workbench. A locomotion system that degrades gracefully on a
+      single actuator failure is strongly preferred over one that stops completely.
+    </p>
+
+    <div class="fig-wrap">
+      <img src="../img/lareginaetal2025_table7_crop.png"
+           alt="Table 7 - Comparison of tracked and wheeled configurations for non-cohesive uneven terrain"
+           loading="lazy">
+      <div class="fig-caption">
+        Table 7 - Comparison of tracked and wheeled configurations (1 = lowest, 5 = highest rating).
+        Terrain: non-cohesive and uneven. Source: La Regina, Genel, Pappalardo &amp; Guida (2025),
+        <em>Machines</em>, 13, 1071.
+        <a href="https://doi.org/10.3390/machines13121071" target="_blank" rel="noopener">doi:10.3390/machines13121071</a>
+        - CC BY 4.0
+      </div>
+    </div>
+
+    <h2>// pugh matrix</h2>
+
+    <p>
+      The Pugh matrix below compares five locomotion concepts against a baseline -
+      the 4WD skid-steering wheeled configuration selected for Argo v1. Scores are
+      relative: <span style="color:var(--green);font-weight:600">+</span> means better than baseline on that criterion,
+      <span style="color:var(--text3)">S</span> means similar, <span style="color:var(--red);font-weight:600">-</span> means worse, <span style="color:var(--red);font-weight:700">--</span> significantly worse.
+      Weights follow directly from the criteria above. The resulting weight distribution
+      is consistent with the independent comparison in La Regina et al. <a href="#ref3">[3]</a>,
+      Table 7, which scores tracked and wheeled platforms on the same terrain type.
+    </p>
+
+    <div class="pugh-wrap">
+      <table class="pugh-table">
+        <thead>
+          <tr>
+            <th>Criterion <span class="weight">weight</span></th>
+            <th>2WD<br>differential</th>
+            <th class="datum">4WD skid-steer<br><span style="font-size:10px;color:var(--accent)">BASELINE - ARGO v1</span></th>
+            <th>Tracked<br>(non-articulated)</th>
+            <th>Ackermann<br>(car-like)</th>
+            <th>Quadruped<br>(legged)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Build feasibility <span class="weight">2</span></td>
+            <td><span class="cell-plus">+</span></td>
+            <td class="datum">D</td>
+            <td><span class="cell-plus">+</span></td>
+            <td><span class="cell-minus">-</span></td>
+            <td><span class="cell-dminus">--</span></td>
+          </tr>
+          <tr>
+            <td>Component cost <span class="weight">2</span></td>
+            <td><span class="cell-plus">+</span></td>
+            <td class="datum">D</td>
+            <td><span class="cell-minus">-</span></td>
+            <td><span class="cell-minus">-</span></td>
+            <td><span class="cell-dminus">--</span></td>
+          </tr>
+          <tr>
+            <td>Uneven terrain traction <span class="weight">3</span></td>
+            <td><span class="cell-minus">-</span></td>
+            <td class="datum">D</td>
+            <td><span class="cell-plus">+</span></td>
+            <td><span class="cell-minus">-</span></td>
+            <td><span class="cell-plus">+</span></td>
+          </tr>
+          <tr>
+            <td>Soft ground capability <span class="weight">3</span></td>
+            <td><span class="cell-minus">-</span></td>
+            <td class="datum">D</td>
+            <td><span class="cell-plus">+</span></td>
+            <td><span class="cell-minus">-</span></td>
+            <td><span class="cell-same">S</span></td>
+          </tr>
+          <tr>
+            <td>Max speed <span class="weight">1</span></td>
+            <td><span class="cell-same">S</span></td>
+            <td class="datum">D</td>
+            <td><span class="cell-minus">-</span></td>
+            <td><span class="cell-plus">+</span></td>
+            <td><span class="cell-dminus">--</span></td>
+          </tr>
+          <tr>
+            <td>Energy efficiency <span class="weight">1</span></td>
+            <td><span class="cell-plus">+</span></td>
+            <td class="datum">D</td>
+            <td><span class="cell-minus">-</span></td>
+            <td><span class="cell-plus">+</span></td>
+            <td><span class="cell-dminus">--</span></td>
+          </tr>
+          <tr>
+            <td>Control complexity <span class="weight">2</span></td>
+            <td><span class="cell-plus">+</span></td>
+            <td class="datum">D</td>
+            <td><span class="cell-same">S</span></td>
+            <td><span class="cell-minus">-</span></td>
+            <td><span class="cell-dminus">--</span></td>
+          </tr>
+          <tr>
+            <td>Tech readiness / community <span class="weight">1</span></td>
+            <td><span class="cell-plus">+</span></td>
+            <td class="datum">D</td>
+            <td><span class="cell-plus">+</span></td>
+            <td><span class="cell-plus">+</span></td>
+            <td><span class="cell-minus">-</span></td>
+          </tr>
+          <tr>
+            <td>Field fault tolerance <span class="weight">2</span></td>
+            <td><span class="cell-minus">-</span></td>
+            <td class="datum">D</td>
+            <td><span class="cell-same">S</span></td>
+            <td><span class="cell-minus">-</span></td>
+            <td><span class="cell-same">S</span></td>
+          </tr>
+          <tr class="score-row">
+            <td>Weighted net score</td>
+            <td class="score-neutral">0</td>
+            <td class="datum score-positive">0</td>
+            <td class="score-positive">+5</td>
+            <td class="score-negative">-11</td>
+            <td class="score-negative">-14</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pugh-legend">
+        <span class="legend-item"><span class="cell-plus">+</span> better than baseline</span>
+        <span class="legend-item"><span class="cell-same">S</span> similar to baseline</span>
+        <span class="legend-item"><span class="cell-minus">-</span> worse than baseline</span>
+        <span class="legend-item"><span class="cell-dminus">--</span> significantly worse</span>
+        <span class="legend-item" style="margin-left:auto;font-style:italic;">weights: 1 = low priority, 3 = high priority</span>
+      </div>
+    </div>
+
+    <h2>// reading the results</h2>
+
+    <p>
+      <strong>2WD differential scores equal to the baseline</strong> at 0. This is
+      not a mistake. Two motors, two drivers, simpler firmware, lower cost - on
+      the criteria that favour simplicity, 2WD is clearly better. For anyone
+      building a first rover for indoor or controlled use, it is a valid choice.
+      The equal score here reflects a real tradeoff between build simplicity
+      and outdoor capability.
+    </p>
+    <p>
+      The decision in favour of 4WD skid-steer comes from two criteria. First,
+      terrain traction and soft ground (both weight 3): with four wheels independently
+      driven, ground contact is maintained even when one wheel lifts off a bump
+      or loses grip on wet grass; with two driven wheels and a passive castor,
+      that same bump can cause loss of heading. Second, field fault tolerance:
+      a 4WD platform that loses one motor can still move and steer; a 2WD that
+      loses a driven wheel becomes uncontrollable. The extra motors are not for
+      speed or torque - they are for stability in the field.
+    </p>
+    <p>
+      <strong>Tracked configuration</strong> scores above the baseline (+5) and is,
+      on paper, the strongest option for this mission. Literature on
+      non-articulated tracked robots confirms why: TGMRs-NA (tracked ground mobile
+      robots, non-articulated) are characterised by extreme mechanical simplicity -
+      two motors, differential steering, no suspension linkage - making them among
+      the least complex locomotion architectures to realise <a href="#ref2">[2]</a>.
+      Traction on soft terrain and obstacle-crossing capability are real advantages,
+      rooted in the Bekker terramechanics model: a longer contact patch distributes
+      ground pressure, and the continuous belt maintains grip where individual wheels
+      would lose contact.
+    </p>
+    <p>
+      The decision against tracks is not about the drivetrain - it is about the track
+      itself. Designing a functional FDM-printed belt or link-chain track involves
+      non-trivial mechanical decisions: belt tension and idler geometry, debris clearing
+      clearances, and joint wear under cyclic load. These are solvable problems, but
+      they represent a significant design effort that sits outside the core scope of
+      this build phase. An additional constraint is turning performance: at the
+      dimensional scale of Argo v1, skid-steering a tracked platform requires enough
+      torque margin to overcome static friction on both tracks simultaneously during
+      a pivot turn. Wheeled skid-steer avoids this entirely - each wheel has an
+      independent contact patch and can be reversed individually without the same
+      friction penalty. For a v1 platform optimising for time-to-outdoor-test,
+      tracks are the right answer for a v2.
+    </p>
+    <p>
+      <strong>Ackermann steering</strong> was considered briefly and dismissed quickly.
+      Car-like steering requires a mechanical steering mechanism - a servo-driven
+      front axle, kingpins, tie rods - all of which require precision and add failure
+      modes. Beyond the mechanical complexity, the control strategy itself is more
+      demanding: Ackermann requires coordinated steering angle and wheel speed inputs,
+      while skid-steer "is more straightforward, as it only requires wheel speed
+      control" <a href="#ref3">[3]</a>. For a rover that needs to turn in place or navigate
+      tight spaces, the zero-radius turning capability of skid-steer is more useful
+      than the energy efficiency advantage of Ackermann at high speed.
+      This is not a race car.
+    </p>
+    <p>
+      <strong>Legged locomotion</strong> scores -14 and the gap is not surprising.
+      A quadruped capable of stable outdoor locomotion requires actuated joints with
+      position and torque feedback, a gait planning algorithm, and structural members
+      that can handle impact loads with every footfall. The control problem alone -
+      static gait planning, ground contact estimation, posture correction - would
+      double or triple the firmware scope. For a v1 platform where the goal is to
+      get something working and tested outdoors, legged locomotion is not a rational
+      choice. It is a future platform, not a starting point.
+    </p>
+
+    <div class="callout">
+      <p>
+        The Pugh matrix is a structured opinion, not a proof. The scores reflect
+        judgement calls on relative importance, and a different weighting would
+        produce a different ranking. What the matrix does well is make those
+        judgement calls explicit: instead of an intuitive "I'll go with wheels",
+        there is a documented set of criteria, weights, and relative scores that
+        can be challenged, revised, or reused for a different mission.
+      </p>
+      <p>
+        In this case, the matrix gives the highest score to tracked, but the
+        selected configuration is 4WD wheeled. The difference between score
+        and decision is useful: it shows exactly which constraint (FDM track
+        design complexity) outweighs the terrain advantage, and it identifies
+        tracked as the logical choice for a v2 build.
+      </p>
+    </div>
+
+    <div class="references">
+      <h3>// references</h3>
+      <ol>
+        <li id="ref1">
+          Bruzzone, L. &amp; Quaglia, G. (2012). Review article: locomotion systems for ground
+          mobile robots in unstructured environments. <em>Mechanical Sciences</em>, 3, 49-62.
+          <a href="https://doi.org/10.5194/ms-3-49-2012" target="_blank" rel="noopener">doi:10.5194/ms-3-49-2012</a>
+        </li>
+        <li id="ref2">
+          Bruzzone, L.; Nodehi, S.E.; Fanghella, P. (2022). Tracked locomotion systems for
+          ground mobile robots: a review. <em>Machines</em>, 10, 648.
+          <a href="https://doi.org/10.3390/machines10080648" target="_blank" rel="noopener">doi:10.3390/machines10080648</a>
+        </li>
+        <li id="ref3">
+          La Regina, R.; Genel, Ö.E.; Pappalardo, C.M.; Guida, D. (2025). A comprehensive
+          review of theoretical advances, practical developments, and modern challenges of
+          autonomous unmanned ground vehicles. <em>Machines</em>, 13, 1071.
+          <a href="https://doi.org/10.3390/machines13121071" target="_blank" rel="noopener">doi:10.3390/machines13121071</a>
+        </li>
+      </ol>
+    </div>
+
+  </div>
+
+  <div class="post-nav">
+    <a href="00-project-overview.html" class="prev">Project overview</a>
+    <a href="02-drivetrain-sizing.html" class="next">Drivetrain sizing</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-brand">2025 - Marco Mechi · Rover Lab · Build Journal</span>
+    <ul class="footer-links">
+      <li><a href="../index.html">Journal</a></li>
+      <li><a href="https://github.com/mmechi/rover-lab">GitHub</a></li>
+      <li><a href="mailto:marco.mechi@gmail.com">Email</a></li>
+    </ul>
+  </div>
+  <div class="footer-inner" style="padding-top:0;margin-top:-0.5rem;">
+    <span style="font-family:var(--mono);font-size:11px;color:var(--text3);">
+      Code: <a href="https://opensource.org/licenses/MIT" style="color:var(--text3);">MIT License</a>
+      &nbsp;&middot;&nbsp;
+      Content: <a href="https://creativecommons.org/licenses/by/4.0/" style="color:var(--text3);">CC BY 4.0</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>

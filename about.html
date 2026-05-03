@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About - Marco Mechi - Rover Lab</title>
+<meta name="description" content="Marco Mechi - Senior Mechanical Engineer. 18+ years in automotive hardware design, simulation and validation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;500;600&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --bg2: #13161e;
+    --bg3: #1a1e28;
+    --border: #232839;
+    --border2: #2e3448;
+    --text: #e8eaf0;
+    --text2: #9ba2bc;
+    --text3: #737a96;
+    --accent: #4f8ef7;
+    --accent2: #1a3a7a;
+    --amber: #f0a940;
+    --green: #3ecf7a;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Sora', sans-serif;
+    --serif: 'Playfair Display', serif;
+    --r: 6px;
+    --r2: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+  nav {
+    border-bottom: 1px solid var(--border);
+    background: rgba(13,15,20,0.92);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--text3); }
+
+  .nav-back {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text2);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-back:hover { color: var(--text); }
+
+  .cv-header {
+    padding: 5rem 0 3rem;
+    border-bottom: 1px solid var(--border);
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .cv-header-eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .cv-header h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+  }
+
+  .cv-header-title {
+    font-size: 16px;
+    color: var(--text2);
+    margin-bottom: 2rem;
+    font-weight: 400;
+  }
+
+  .cv-contacts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .cv-contact-item {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text2);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .cv-contact-item a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .cv-contact-item a:hover { text-decoration: underline; }
+
+  .cv-section { padding: 3rem 0 0; }
+
+  .cv-section-label {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--text3);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cv-profile-text {
+    font-size: 16px;
+    color: var(--text2);
+    line-height: 1.85;
+    max-width: 760px;
+  }
+
+  .cv-profile-text strong { color: var(--text); font-weight: 600; }
+
+  .cv-experience-item {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cv-experience-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .cv-exp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .cv-exp-role {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .cv-exp-period {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    white-space: nowrap;
+  }
+
+  .cv-exp-company {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .cv-exp-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .cv-exp-bullets li {
+    font-size: 15px;
+    color: var(--text2);
+    line-height: 1.7;
+    padding-left: 1.25rem;
+    position: relative;
+  }
+
+  .cv-exp-bullets li::before {
+    content: '/';
+    position: absolute;
+    left: 0;
+    color: var(--text3);
+    font-family: var(--mono);
+  }
+
+  .cv-skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .cv-skill-block {
+    border: 1px solid var(--border2);
+    border-radius: var(--r);
+    background: var(--bg2);
+    padding: 1.25rem;
+  }
+
+  .cv-skill-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .cv-skill-value {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.65;
+  }
+
+  .cv-edu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cv-edu-item:last-child { border-bottom: none; }
+
+  .cv-edu-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .cv-edu-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    text-align: right;
+  }
+
+  .note-box {
+    margin-top: 3rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--border2);
+    border-radius: var(--r);
+    background: var(--bg2);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text3);
+    line-height: 1.7;
+  }
+
+  footer { border-top: 1px solid var(--border); padding: 2rem 0; margin-top: 4rem; }
+
+  .footer-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-brand { font-family: var(--mono); font-size: 12px; color: var(--text3); }
+
+  .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+
+  .footer-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text3);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--text2); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    .cv-skills-grid { grid-template-columns: 1fr; }
+    .cv-exp-header { flex-direction: column; }
+    .cv-edu-item { flex-direction: column; }
+    .cv-edu-meta { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">marco<span>.</span>rover_lab<span>()</span></a>
+    <a href="index.html" class="nav-back">&larr; Back to journal</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="cv-header">
+    <p class="cv-header-eyebrow">// about</p>
+    <h1>Marco Mechi</h1>
+    <p class="cv-header-title">Senior Mechanical Engineer - Hardware Design, Simulation &amp; Validation</p>
+    <div class="cv-contacts">
+      <span class="cv-contact-item">Italy</span>
+      <span class="cv-contact-item"><a href="https://linkedin.com/in/marcomechi" target="_blank" rel="noopener">linkedin.com/in/marcomechi</a></span>
+      <span class="cv-contact-item"><a href="https://github.com/mmechi" target="_blank" rel="noopener">github.com/mmechi</a></span>
+    </div>
+  </div>
+
+  <div class="cv-section">
+    <div class="cv-section-label">// profile</div>
+    <p class="cv-profile-text">
+      Mechanical engineer with <strong>18+ years in automotive series production</strong>, designing and validating
+      hardware from concept through production launch. Full design cycle ownership: manufacturing-aware CAD
+      in Creo and SolidWorks, production drawings with geometric tolerancing, verification and validation planning,
+      design failure mode analysis, and supplier engagement through production release.
+    </p>
+    <br>
+    <p class="cv-profile-text">
+      Current focus: <strong>hydrogen injector development for heavy-duty trucks and Non-Road Mobile Machinery</strong>,
+      leading a multidisciplinary team in an agile environment. Previous experience covers axial-flux electric drives
+      for BEV platforms, high-pressure fuel systems, and thermo-structural simulation for space hardware.
+    </p>
+  </div>
+
+  <div class="cv-section">
+    <div class="cv-section-label">// experience</div>
+
+    <div class="cv-experience-item">
+      <div class="cv-exp-header">
+        <span class="cv-exp-role">Technical Lead Engineer</span>
+        <span class="cv-exp-period">2024 - Present</span>
+      </div>
+      <div class="cv-exp-company">Tier-1 Hydrogen Injection Systems - Italy</div>
+      <ul class="cv-exp-bullets">
+        <li>Leading hardware design and manufacturing-aware CAD for H&#8322; direct injection systems on heavy-duty trucks and NRMM, from concept to supplier-ready drawings.</li>
+        <li>Owning design verification cycles: test plan definition, fixture design, data-driven design decisions, and sign-off against functional requirements.</li>
+        <li>Bridging mechanical design, simulation, testing, and supplier teams within agile sprint cycles.</li>
+        <li>Applying design-for-manufacturability principles at early CAD stage to reduce material waste and assembly cost.</li>
+      </ul>
+    </div>
+
+    <div class="cv-experience-item">
+      <div class="cv-exp-header">
+        <span class="cv-exp-role">Technical Lead Engineer</span>
+        <span class="cv-exp-period">2022 - 2023</span>
+      </div>
+      <div class="cv-exp-company">Tier-1 Electric Drives - Italy</div>
+      <ul class="cv-exp-bullets">
+        <li>Led a 10-engineer multidisciplinary team on axial-flux electric drive development for BEV platforms; full mechanical design ownership from architecture to production release.</li>
+        <li>Defined and enforced verification and validation workflows: test plans, failure mode analysis, design review gates, corrective action tracking.</li>
+        <li>~30% improvement in system performance through electromagnetic and mechanical co-design using DFSS methodology and multi-objective optimisation.</li>
+        <li>~8% cost reduction through design-for-manufacturability practices and structured supplier engagement.</li>
+      </ul>
+    </div>
+
+    <div class="cv-experience-item">
+      <div class="cv-exp-header">
+        <span class="cv-exp-role">Product Mechanical Engineer</span>
+        <span class="cv-exp-period">2020 - 2021</span>
+      </div>
+      <div class="cv-exp-company">Tier-1 Electric Drives - Italy</div>
+      <ul class="cv-exp-bullets">
+        <li>Designed novel stator endless-winding configuration: ~20% fewer assembly steps and significant reduction in manufacturing line investment.</li>
+        <li>Coordinated a 5-engineer team from concept to prototype on a new-generation passenger vehicle electric drive.</li>
+        <li>Introduced design-for-manufacturability review checkpoints, reducing iteration count and improving time-to-market.</li>
+      </ul>
+    </div>
+
+    <div class="cv-experience-item">
+      <div class="cv-exp-header">
+        <span class="cv-exp-role">Electromagnetic Simulation Engineer</span>
+        <span class="cv-exp-period">2018 - 2019</span>
+      </div>
+      <div class="cv-exp-company">Tier-1 Electric Drives - Italy</div>
+      <ul class="cv-exp-bullets">
+        <li>FEM electromagnetic simulations on EV drives (ANSYS Maxwell, Altair Flux) - parametric optimisation for copper loss reduction and noise/vibration suppression.</li>
+        <li>Harmonic analysis for acoustic optimisation on radial flux motors; identified and suppressed dominant noise and vibration modes.</li>
+        <li>Developed analytical model to reduce rare-earth magnet content in electric drives - cost and supply-chain impact sustained through production.</li>
+      </ul>
+    </div>
+
+    <div class="cv-experience-item">
+      <div class="cv-exp-header">
+        <span class="cv-exp-role">Structural Simulation Engineer</span>
+        <span class="cv-exp-period">2007 - 2018</span>
+      </div>
+      <div class="cv-exp-company">Tier-1 Fuel Systems - Italy</div>
+      <ul class="cv-exp-bullets">
+        <li>Structural simulation on 50+ hydraulic components, fuel rails, injectors, and solenoid actuators (ANSYS Mechanical APDL/Workbench) over 11 years.</li>
+        <li>Simulation-driven design for injection pressures up to 500 bar; fatigue life optimisation under extreme pressure cycling.</li>
+        <li>Applied Six Sigma methods to simulation and design workflows; formalised test procedures and quality gates.</li>
+        <li>Supported field validation and root-cause analysis (8D methodology) on production components.</li>
+      </ul>
+    </div>
+
+    <div class="cv-experience-item">
+      <div class="cv-exp-header">
+        <span class="cv-exp-role">Mechanical Engineer</span>
+        <span class="cv-exp-period">2005 - 2007</span>
+      </div>
+      <div class="cv-exp-company">Aerospace &amp; Space Optics - Italy</div>
+      <ul class="cv-exp-bullets">
+        <li>Thermo-structural simulation for opto-mechanical components on space exploration missions - design for extreme thermal environments with sub-micron optical alignment tolerances.</li>
+        <li>Developed test protocols, validation procedures, and ICDs for mission-critical hardware reliability.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cv-section">
+    <div class="cv-section-label">// technical skills</div>
+    <div class="cv-skills-grid">
+      <div class="cv-skill-block">
+        <div class="cv-skill-label">CAD / Design</div>
+        <div class="cv-skill-value">Creo Parametric (daily use), SolidWorks (proficient), GD&amp;T, design for manufacturability, tolerance analysis</div>
+      </div>
+      <div class="cv-skill-block">
+        <div class="cv-skill-label">Verification &amp; Validation</div>
+        <div class="cv-skill-value">V&amp;V planning, failure mode and effects analysis, Six Sigma DFSS Green Belt, 8D root-cause analysis, test fixture design</div>
+      </div>
+      <div class="cv-skill-block">
+        <div class="cv-skill-label">Simulation</div>
+        <div class="cv-skill-value">ANSYS Mechanical APDL &amp; Workbench, ANSYS Maxwell, Altair Flux, FEA structural / thermal / electromagnetic, modeFrontier</div>
+      </div>
+      <div class="cv-skill-block">
+        <div class="cv-skill-label">PDM / PLM</div>
+        <div class="cv-skill-value">Teamcenter PLM (daily use), Windchill (proficient), revision control, BOM management</div>
+      </div>
+      <div class="cv-skill-block">
+        <div class="cv-skill-label">Domain</div>
+        <div class="cv-skill-value">Electric drives (axial &amp; radial flux), hydrogen injection, high-pressure fuel systems, battery-electric powertrain, opto-mechanical space hardware</div>
+      </div>
+      <div class="cv-skill-block">
+        <div class="cv-skill-label">Data / Methods</div>
+        <div class="cv-skill-value">Python, TensorFlow, MATLAB, Monte Carlo, Design of Experiments, Power BI, Agile/Kanban</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cv-section" style="padding-bottom: 1rem;">
+    <div class="cv-section-label">// education &amp; certifications</div>
+    <div class="cv-edu-item">
+      <span class="cv-edu-name">M.Sc. Mechanical Engineering</span>
+      <span class="cv-edu-meta">Universita di Pisa &middot; 2005</span>
+    </div>
+    <div class="cv-edu-item">
+      <span class="cv-edu-name">Specialisation: Automotive Electronics &amp; Powertrain Electrification</span>
+      <span class="cv-edu-meta">Universita di Pisa &middot; 2021</span>
+    </div>
+    <div class="cv-edu-item">
+      <span class="cv-edu-name">Design For Six Sigma (DFSS) Green Belt</span>
+      <span class="cv-edu-meta">2017</span>
+    </div>
+    <div class="cv-edu-item">
+      <span class="cv-edu-name">Design for Additive Manufacturing</span>
+      <span class="cv-edu-meta">Universita di Pisa &middot; 2023</span>
+    </div>
+    <div class="cv-edu-item">
+      <span class="cv-edu-name">TensorFlow Developer Certificate</span>
+      <span class="cv-edu-meta">DeepLearning.AI &middot; 2025</span>
+    </div>
+    <div class="cv-edu-item">
+      <span class="cv-edu-name">Hydrogen Design Principles</span>
+      <span class="cv-edu-meta">Universita di Pisa &middot; 2025</span>
+    </div>
+  </div>
+
+  <div class="note-box">
+    // This is a public profile summary. For a complete CV with full company details, contact me via
+    <a href="https://linkedin.com/in/marcomechi" style="color:var(--accent);">LinkedIn</a>.
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-brand">2025 - Marco Mechi · Rover Lab · Build Journal</span>
+    <ul class="footer-links">
+      <li><a href="index.html">Journal</a></li>
+      <li><a href="https://github.com/mmechi/rover-lab">GitHub</a></li>
+      <li><a href="https://linkedin.com/in/marcomechi">LinkedIn</a></li>
+    </ul>
+  </div>
+  <div class="footer-inner" style="padding-top:0; margin-top:-0.5rem;">
+    <span style="font-family:var(--mono); font-size:11px; color:var(--text3);">
+      Code: <a href="https://opensource.org/licenses/MIT" style="color:var(--text3);">MIT License</a>
+      &nbsp;&middot;&nbsp;
+      Content: <a href="https://creativecommons.org/licenses/by/4.0/" style="color:var(--text3);">CC BY 4.0</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>

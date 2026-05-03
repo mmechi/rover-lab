@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>#00 Project Overview - Rover Lab</title>
+<meta name="description" content="Argo v1 project overview: mission, mechanical design, electronics, firmware, validation and roadmap.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;500;600&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --bg2: #13161e;
+    --bg3: #1a1e28;
+    --border: #232839;
+    --border2: #2e3448;
+    --text: #e8eaf0;
+    --text2: #9ba2bc;
+    --text3: #737a96;
+    --accent: #4f8ef7;
+    --accent2: #1a3a7a;
+    --amber: #f0a940;
+    --green: #3ecf7a;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Sora', sans-serif;
+    --serif: 'Playfair Display', serif;
+    --r: 6px;
+    --r2: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+  nav {
+    border-bottom: 1px solid var(--border);
+    background: rgba(13,15,20,0.92);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--text3); }
+
+  .nav-back {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text2);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-back:hover { color: var(--text); }
+
+  .post-header {
+    padding: 5rem 0 3rem;
+    border-bottom: 1px solid var(--border);
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .post-eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.25rem;
+  }
+
+  .post-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text3);
+  }
+
+  .post-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 2px 10px;
+    border-radius: 99px;
+    border: 1px solid;
+    color: var(--accent);
+    border-color: var(--accent2);
+    background: rgba(79,142,247,0.07);
+  }
+
+  .post-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    margin-left: auto;
+  }
+
+  .post-header h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 900;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+
+  .post-header h1 em { font-style: normal; color: var(--accent); }
+
+  .post-intro {
+    font-size: 17px;
+    color: var(--text2);
+    max-width: 720px;
+    line-height: 1.85;
+  }
+
+  .post-body { padding: 3rem 0 2rem; }
+
+  .post-body p {
+    font-size: 17px;
+    color: var(--text2);
+    line-height: 1.9;
+    margin-bottom: 1.5rem;
+    max-width: 720px;
+  }
+
+  .post-body strong { color: var(--text); font-weight: 600; }
+
+  .mindmap-wrap {
+    margin: 3rem 0;
+    border: 1px solid var(--border2);
+    border-radius: var(--r2);
+    background: var(--bg2);
+    padding: 2rem 1rem;
+    overflow-x: auto;
+  }
+
+  .mindmap-caption {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    text-align: center;
+    margin-top: 1rem;
+    letter-spacing: 0.1em;
+  }
+
+  .post-nav {
+    display: flex;
+    justify-content: flex-end;
+    padding: 2rem 0 4rem;
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  .post-nav a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .post-nav a::after { content: '->'; }
+
+  footer { border-top: 1px solid var(--border); padding: 2rem 0; }
+
+  .footer-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-brand { font-family: var(--mono); font-size: 12px; color: var(--text3); }
+
+  .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+
+  .footer-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text3);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--text2); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Markmap dark theme overrides */
+  .mindmap-wrap div.markmap {
+    display: block;
+    width: 100%;
+  }
+  .mindmap-wrap div.markmap > svg {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+    background: transparent !important;
+  }
+  .mindmap-wrap .markmap-node foreignObject div,
+  .mindmap-wrap .markmap-node foreignObject p {
+    color: var(--text) !important;
+    background: transparent !important;
+  }
+  .mindmap-wrap .markmap-node > circle {
+    cursor: pointer;
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@0.16"></script>
+<script>
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const el = document.querySelector('div.markmap');
+      if (el && el.__markmap) el.__markmap.fit();
+    }, 400);
+  });
+</script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">marco<span>.</span>rover_lab<span>()</span></a>
+    <a href="../index.html" class="nav-back">&larr; Back to journal</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="post-header">
+    <p class="post-eyebrow">// build journal - project overview</p>
+    <div class="post-meta">
+      <span class="post-num">#00</span>
+      <span class="post-badge">Overview</span>
+      <span class="post-date">May 2025</span>
+    </div>
+    <h1>Argo v1: the full picture<br>before <em>the build starts.</em></h1>
+    <p class="post-intro">
+      Before going deep into individual design decisions, this post maps out the entire
+      project structure: what has been decided, what is being built, and where the
+      roadmap leads. A living document that will be updated as the build progresses.
+    </p>
+  </div>
+
+  <div class="post-body">
+
+    <p>
+      Every engineering project benefits from a map. Not a Gantt chart, but a real picture
+      of how the pieces connect: mission driving design choices, design choices driving
+      component selection, components driving firmware, the whole system driving the
+      validation plan. Without that picture, it is easy to build something that works
+      in isolation but fails as a system.
+    </p>
+    <p>
+      This one is agile by design. Priorities can shift - a procurement issue on one
+      subsystem may change the sequencing of another, and that is fine as long as the
+      overall structure stays visible. The map below is the reference. It will be
+      updated as decisions are made, revised, or validated by test results.
+    </p>
+
+    <div class="mindmap-wrap">
+      <div class="markmap" style="height:520px;" data-options='{"colorFreezeLevel":2,"initialExpandLevel":2,"color":["#4f8ef7","#f0a940","#3ecf7a","#c778dd","#60a5fa","#fb923c"],"duration":300,"paddingX":16,"zoom":true,"pan":true}'>
+
+# ARGO v1
+## Mission
+- Outdoor terrain navigation
+- 4WD skid-steering platform
+- Low budget, deliberate choice
+- Full engineering documentation
+## Mechanical Design
+- Drivetrain sizing and margins
+- Planetary gear DC motors
+- Swing arm suspension
+- Engineering-grade FDM
+- Wheel and axle system
+## Electronics
+- H-bridge motor drivers x4
+- 24V battery power system
+- Hall-effect odometry x4
+- IMU and sensors (planned)
+## Firmware
+- Odometry engine (RPM, EMA)
+- Skid-steer motor control
+- Telemetry and data logging
+## Validation
+- 15-phase bench test plan
+- GO / NO-GO criteria
+- Subsystem qualification
+## Roadmap
+### P1 - Mobility
+- IMU fusion + waypoint nav
+- RC manual override
+### P2 - Perception
+- Camera + obstacle avoidance
+- ROS2 + SLAM
+### P3 - Applications
+- Sentry / crop / inspection
+
+      </div>
+      <div class="mindmap-caption">// project structure map - click nodes to expand · scroll to zoom · drag to pan</div>
+    </div>
+
+    <p>
+      Six branches, one root. Each one represents a work area that needs to close before
+      the rover can be called functional. Here is what each of them means in practice.
+    </p>
+
+    <p>
+      <strong>Mission</strong> is not a formality. It defines the operating environment
+      (outdoor terrain, not a flat floor), the locomotion concept (4WD skid-steering,
+      chosen for simplicity and robustness over differential or Ackermann), the budget
+      constraint (deliberately tight, to force prioritisation), and the documentation
+      commitment that this journal represents. Every design decision downstream is
+      justified against these four points. If a choice cannot be traced back to the
+      mission, it does not belong in the build.
+    </p>
+
+    <p>
+      <strong>Mechanical Design</strong> and <strong>Electronics</strong> are the two
+      hardware branches and they are tightly coupled. The drivetrain sizing determines
+      the motor and driver requirements; the power budget determines the battery and
+      wiring; the sensor placement is constrained by the mechanical architecture.
+      Getting this coupling right on paper - before any part is printed or soldered -
+      is the main purpose of the early posts in this journal.
+    </p>
+
+    <p>
+      <strong>Firmware</strong> is where hardware becomes behaviour. At this stage the
+      firmware scope is deliberately narrow: reliable odometry, correct motor control,
+      and structured telemetry. Nothing more. Keeping the firmware minimal in the first
+      build phase is a conscious choice - it reduces the number of variables when
+      something does not work, and it establishes a clean baseline that later autonomy
+      layers can build on.
+    </p>
+
+    <p>
+      <strong>Validation</strong> is the branch most people skip in hobby projects, and
+      the one I refuse to skip here. The plan is a structured sequence of bench tests,
+      each with explicit GO / NO-GO criteria, covering every subsystem before integration.
+      This is not about being rigorous for its own sake. It is about knowing, at each
+      step, whether the system is ready to move to the next one. Without that, debugging
+      becomes archaeology.
+    </p>
+
+    <p>
+      <strong>Roadmap</strong> is the honest answer to the question "where does this go?"
+      The three priorities are ordered by dependency, not by ambition.
+      <strong>P1 - Mobility</strong> closes the current build: IMU-fused odometry,
+      waypoint navigation, RC override as a safety net. This is the minimum that makes
+      the rover autonomous in any meaningful sense.
+      <strong>P2 - Perception</strong> adds a camera and obstacle avoidance, and
+      introduces ROS2 as the middleware layer. This is where the platform starts to
+      interact with its environment rather than just traverse it.
+      <strong>P3 - Applications</strong> is the open end: sentry patrol, crop monitoring,
+      inspection tasks. Whether any of these gets built depends on what P1 and P2 teach
+      about the platform's real capabilities and limits.
+    </p>
+
+    <p>
+      Each branch in the map has at least one dedicated post. The ones already written
+      are linked from the journal. The ones still open are placeholders for work that
+      has not started yet - or that started but is not ready to publish. That gap between
+      the map and the journal is itself part of the documentation.
+    </p>
+
+  </div>
+
+  <div class="post-nav">
+    <a href="01-locomotion-options.html">Next: Locomotion system selection</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-brand">2025 - Marco Mechi · Rover Lab · Build Journal</span>
+    <ul class="footer-links">
+      <li><a href="../index.html">Journal</a></li>
+      <li><a href="https://github.com/mmechi/rover-lab">GitHub</a></li>
+      <li><a href="mailto:marco.mechi@gmail.com">Email</a></li>
+    </ul>
+  </div>
+  <div class="footer-inner" style="padding-top:0;margin-top:-0.5rem;">
+    <span style="font-family:var(--mono);font-size:11px;color:var(--text3);">
+      Code: <a href="https://opensource.org/licenses/MIT" style="color:var(--text3);">MIT License</a>
+      &nbsp;&middot;&nbsp;
+      Content: <a href="https://creativecommons.org/licenses/by/4.0/" style="color:var(--text3);">CC BY 4.0</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 460" font-family="'IBM Plex Mono', monospace">
+  <defs>
+    <style>
+      text { font-family: 'IBM Plex Mono', 'Courier New', monospace; }
+      .root-box  { fill: #1a1e28; stroke: #4f8ef7; stroke-width: 1.5; rx: 6; }
+      .w-box     { fill: #1a1e28; stroke: #4f8ef7; stroke-width: 1.5; }
+      .t-box     { fill: #1a1e28; stroke: #f0a940; stroke-width: 1.5; }
+      .l-box     { fill: #1a1e28; stroke: #c778dd; stroke-width: 1.5; }
+      .h-box     { fill: #1a1e28; stroke: #737a96; stroke-width: 1; }
+      .sub-box   { fill: #13161e; stroke: #2e3448; stroke-width: 1; }
+      .lbl-root  { fill: #4f8ef7; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+      .lbl-w     { fill: #4f8ef7; font-size: 10px; letter-spacing: .12em; }
+      .lbl-t     { fill: #f0a940; font-size: 10px; letter-spacing: .12em; }
+      .lbl-l     { fill: #c778dd; font-size: 10px; letter-spacing: .12em; }
+      .lbl-h     { fill: #737a96; font-size: 10px; letter-spacing: .12em; }
+      .title     { fill: #e8eaf0; font-size: 13px; font-weight: 500; }
+      .sub       { fill: #9ba2bc; font-size: 10px; }
+      .connector { stroke: #2e3448; stroke-width: 1.5; fill: none; }
+      .conn-w    { stroke: #4f8ef7; stroke-width: 1; fill: none; stroke-dasharray: 3 3; opacity: .5; }
+      .conn-t    { stroke: #f0a940; stroke-width: 1; fill: none; stroke-dasharray: 3 3; opacity: .5; }
+      .conn-l    { stroke: #c778dd; stroke-width: 1; fill: none; stroke-dasharray: 3 3; opacity: .5; }
+    </style>
+  </defs>
+
+  <!-- background -->
+  <rect width="900" height="460" fill="#0d0f14" rx="12"/>
+
+  <!-- ROOT -->
+  <rect x="340" y="18" width="220" height="44" rx="6" class="root-box"/>
+  <text x="450" y="36" text-anchor="middle" class="lbl-root">ground mobile robots</text>
+  <text x="450" y="52" text-anchor="middle" class="title" font-size="12">GROUND MOBILE ROBOTS</text>
+
+  <!-- connector root → 3 main -->
+  <!-- vertical stem -->
+  <line x1="450" y1="62" x2="450" y2="82" class="connector"/>
+  <!-- horizontal bar -->
+  <line x1="150" y1="82" x2="750" y2="82" class="connector"/>
+  <!-- drops to main boxes -->
+  <line x1="150" y1="82" x2="150" y2="108" class="connector"/>
+  <line x1="450" y1="82" x2="450" y2="108" class="connector"/>
+  <line x1="750" y1="82" x2="750" y2="108" class="connector"/>
+
+  <!-- WHEELED -->
+  <rect x="60" y="108" width="180" height="52" rx="6" class="w-box"/>
+  <text x="150" y="126" text-anchor="middle" class="lbl-w">W - Wheeled</text>
+  <text x="150" y="146" text-anchor="middle" class="title">Wheeled robots</text>
+
+  <!-- TRACKED -->
+  <rect x="360" y="108" width="180" height="52" rx="6" class="t-box"/>
+  <text x="450" y="126" text-anchor="middle" class="lbl-t">T - Tracked</text>
+  <text x="450" y="146" text-anchor="middle" class="title">Tracked robots</text>
+
+  <!-- LEGGED -->
+  <rect x="660" y="108" width="180" height="52" rx="6" class="l-box"/>
+  <text x="750" y="126" text-anchor="middle" class="lbl-l">L - Legged</text>
+  <text x="750" y="146" text-anchor="middle" class="title">Legged robots</text>
+
+  <!-- W subtypes -->
+  <line x1="150" y1="160" x2="150" y2="180" class="conn-w"/>
+  <line x1="90"  y1="180" x2="210" y2="180" class="conn-w"/>
+  <line x1="90"  y1="180" x2="90"  y2="200" class="conn-w"/>
+  <line x1="210" y1="180" x2="210" y2="200" class="conn-w"/>
+
+  <rect x="30"  y="200" width="120" height="40" rx="4" class="sub-box"/>
+  <text x="90"  y="217" text-anchor="middle" class="sub">non-articulated</text>
+  <text x="90"  y="230" text-anchor="middle" class="sub">frame</text>
+
+  <rect x="150" y="200" width="120" height="40" rx="4" class="sub-box"/>
+  <text x="210" y="217" text-anchor="middle" class="sub">articulated</text>
+  <text x="210" y="230" text-anchor="middle" class="sub">frame</text>
+
+  <!-- T subtypes -->
+  <line x1="450" y1="160" x2="450" y2="180" class="conn-t"/>
+  <line x1="390" y1="180" x2="510" y2="180" class="conn-t"/>
+  <line x1="390" y1="180" x2="390" y2="200" class="conn-t"/>
+  <line x1="510" y1="180" x2="510" y2="200" class="conn-t"/>
+
+  <rect x="330" y="200" width="120" height="40" rx="4" class="sub-box"/>
+  <text x="390" y="217" text-anchor="middle" class="sub">non-articulated</text>
+  <text x="390" y="230" text-anchor="middle" class="sub">tracks</text>
+
+  <rect x="450" y="200" width="120" height="40" rx="4" class="sub-box"/>
+  <text x="510" y="217" text-anchor="middle" class="sub">articulated</text>
+  <text x="510" y="230" text-anchor="middle" class="sub">tracks</text>
+
+  <!-- L subtypes -->
+  <line x1="750" y1="160" x2="750" y2="180" class="conn-l"/>
+  <line x1="690" y1="180" x2="810" y2="180" class="conn-l"/>
+  <line x1="690" y1="180" x2="690" y2="200" class="conn-l"/>
+  <line x1="810" y1="180" x2="810" y2="200" class="conn-l"/>
+
+  <rect x="630" y="200" width="120" height="40" rx="4" class="sub-box"/>
+  <text x="690" y="217" text-anchor="middle" class="sub">static gait</text>
+  <text x="690" y="230" text-anchor="middle" class="sub"> </text>
+
+  <rect x="750" y="200" width="120" height="40" rx="4" class="sub-box"/>
+  <text x="810" y="217" text-anchor="middle" class="sub">dynamic gait</text>
+  <text x="810" y="230" text-anchor="middle" class="sub"> </text>
+
+  <!-- separator line -->
+  <line x1="40" y1="290" x2="860" y2="290" stroke="#232839" stroke-width="1" stroke-dasharray="4 4"/>
+  <text x="450" y="284" text-anchor="middle" class="lbl-h" font-size="9">HYBRID CATEGORIES</text>
+
+  <!-- HYBRID boxes -->
+  <!-- LW -->
+  <rect x="32"  y="298" width="190" height="60" rx="6" class="h-box"/>
+  <text x="127" y="316" text-anchor="middle" class="lbl-h">LW hybrid</text>
+  <text x="127" y="334" text-anchor="middle" class="title" font-size="12">Leg-Wheel</text>
+  <text x="127" y="350" text-anchor="middle" class="sub">legged + wheeled</text>
+
+  <!-- LT -->
+  <rect x="240" y="298" width="190" height="60" rx="6" class="h-box"/>
+  <text x="335" y="316" text-anchor="middle" class="lbl-h">LT hybrid</text>
+  <text x="335" y="334" text-anchor="middle" class="title" font-size="12">Leg-Track</text>
+  <text x="335" y="350" text-anchor="middle" class="sub">legged + tracked</text>
+
+  <!-- WT -->
+  <rect x="448" y="298" width="190" height="60" rx="6" class="h-box"/>
+  <text x="543" y="316" text-anchor="middle" class="lbl-h">WT hybrid</text>
+  <text x="543" y="334" text-anchor="middle" class="title" font-size="12">Wheel-Track</text>
+  <text x="543" y="350" text-anchor="middle" class="sub">wheeled + tracked</text>
+
+  <!-- LWT -->
+  <rect x="656" y="298" width="212" height="60" rx="6" class="h-box"/>
+  <text x="762" y="316" text-anchor="middle" class="lbl-h">LWT hybrid</text>
+  <text x="762" y="334" text-anchor="middle" class="title" font-size="12">Leg-Wheel-Track</text>
+  <text x="762" y="350" text-anchor="middle" class="sub">all three combined</text>
+
+  <!-- Argo callout -->
+  <rect x="60" y="108" width="180" height="52" rx="6" fill="none" stroke="#4f8ef7" stroke-width="2.5"/>
+  <rect x="32" y="298" width="190" height="60" rx="6" fill="none" stroke="#2e3448" stroke-width="1"/>
+
+  <!-- Argo marker on W box -->
+  <rect x="196" y="112" width="56" height="16" rx="3" fill="#1a3a7a"/>
+  <text x="224" y="124" text-anchor="middle" fill="#4f8ef7" font-size="9" letter-spacing=".08em">ARGO v1</text>
+
+  <!-- Argo marker on T non-articulated -->
+  <rect x="330" y="200" width="120" height="40" rx="4" fill="none" stroke="#f0a940" stroke-width="1.5"/>
+
+  <!-- caption -->
+  <text x="450" y="430" text-anchor="middle" fill="#737a96" font-size="10" letter-spacing=".1em">
+    Fig. 1 - Ground mobile robot categories · adapted from Bruzzone &amp; Quaglia (2012), Mechanical Sciences 3:49–62 · CC BY 3.0
+  </text>
+</svg>
