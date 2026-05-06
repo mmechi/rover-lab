@@ -293,26 +293,26 @@
     </div>
     <h1>Argo v1: the full picture<br>before <em>the build starts.</em></h1>
     <p class="post-intro">
-      Before going deep into individual design decisions, this post maps out the entire
-      project structure: what has been decided, what is being built, and where the
-      roadmap leads. A living document that will be updated as the build progresses.
+      Before going into individual design decisions, here I map out the whole project:
+      what has been decided, what is being built, and where the roadmap leads.
+      I'll update it as the build progresses.
     </p>
   </div>
 
   <div class="post-body">
 
     <p>
-      Every engineering project benefits from a map. Not a Gantt chart, but a real picture
-      of how the pieces connect: mission driving design choices, design choices driving
-      component selection, components driving firmware, the whole system driving the
-      validation plan. Without that picture, it is easy to build something that works
+      Every engineering project benefits from a map. Not a Gantt chart - a real picture
+      of how the pieces connect: mission drives design choices, design choices drive
+      component selection, components drive firmware, the whole thing drives the
+      validation plan. Without that picture, it's easy to build something that works
       in isolation but fails as a system.
     </p>
     <p>
-      This one is agile by design. Priorities can shift - a procurement issue on one
-      subsystem may change the sequencing of another, and that is fine as long as the
-      overall structure stays visible. The map below is the reference. It will be
-      updated as decisions are made, revised, or validated by test results.
+      This one is agile by design. Priorities can shift - a problem with one component
+      can change the order of everything else, and that's fine as long as the overall
+      structure stays visible. The map below is the reference. I'll update it as
+      decisions are made, revised, or confirmed by test results.
     </p>
 
     <div class="mindmap-wrap">
@@ -358,66 +358,62 @@
     </div>
 
     <p>
-      Six branches, one root. Each one represents a work area that needs to close before
-      the rover can be called functional. Here is what each of them means in practice.
+      Six branches, one root. Each one is a work area that needs to be done before
+      the rover actually works. Here is what each one means.
     </p>
 
     <p>
       <strong>Mission</strong> is not a formality. It defines the operating environment
       (outdoor terrain, not a flat floor), the locomotion concept (4WD skid-steering,
-      chosen for simplicity and robustness over differential or Ackermann), the budget
-      constraint (deliberately tight, to force prioritisation), and the documentation
-      commitment that this journal represents. Every design decision downstream is
-      justified against these four points. If a choice cannot be traced back to the
-      mission, it does not belong in the build.
+      chosen for simplicity and robustness), the budget (deliberately tight, to force
+      good decisions), and the documentation commitment this journal represents.
+      Every design decision I make is checked against these four points. If a choice
+      can't be traced back to the mission, it doesn't belong in the build.
     </p>
 
     <p>
       <strong>Mechanical Design</strong> and <strong>Electronics</strong> are the two
-      hardware branches and they are tightly coupled. The drivetrain sizing determines
-      the motor and driver requirements; the power budget determines the battery and
-      wiring; the sensor placement is constrained by the mechanical architecture.
-      Getting this coupling right on paper - before any part is printed or soldered -
-      is the main purpose of the early posts in this journal.
+      hardware branches, and they are tightly coupled. The drivetrain sizing sets the
+      motor and driver requirements; the power budget sets the battery and wiring;
+      the sensor placement is constrained by the mechanical architecture. Getting this
+      right on paper - before anything is printed or soldered - is the main point of
+      the early posts.
     </p>
 
     <p>
-      <strong>Firmware</strong> is where hardware becomes behaviour. At this stage the
-      firmware scope is deliberately narrow: reliable odometry, correct motor control,
-      and structured telemetry. Nothing more. Keeping the firmware minimal in the first
-      build phase is a conscious choice - it reduces the number of variables when
-      something does not work, and it establishes a clean baseline that later autonomy
-      layers can build on.
+      <strong>Firmware</strong> is where hardware becomes behaviour. At this stage I'm
+      keeping the scope narrow: reliable odometry, correct motor control, structured
+      telemetry. Nothing more. Fewer moving parts means easier debugging, and a clean
+      baseline is easier to extend later.
     </p>
 
     <p>
-      <strong>Validation</strong> is the branch most people skip in hobby projects, and
-      the one I refuse to skip here. The plan is a structured sequence of bench tests,
-      each with explicit GO / NO-GO criteria, covering every subsystem before integration.
-      This is not about being rigorous for its own sake. It is about knowing, at each
-      step, whether the system is ready to move to the next one. Without that, debugging
-      becomes archaeology.
+      <strong>Validation</strong> is the branch most people skip in hobby projects.
+      I'm not skipping it. The plan is a structured sequence of bench tests, each with
+      explicit GO / NO-GO criteria, covering every subsystem before integration. Not
+      for the sake of being rigorous - but because knowing at each step whether the
+      system is ready makes everything easier. Without that, debugging becomes archaeology.
     </p>
 
     <p>
-      <strong>Roadmap</strong> is the honest answer to the question "where does this go?"
-      The three priorities are ordered by dependency, not by ambition.
+      <strong>Roadmap</strong> is my answer to "where does this go?" The three
+      priorities are ordered by dependency, not by how exciting they are.
       <strong>P1 - Mobility</strong> closes the current build: IMU-fused odometry,
       waypoint navigation, RC override as a safety net. This is the minimum that makes
-      the rover autonomous in any meaningful sense.
-      <strong>P2 - Perception</strong> adds a camera and obstacle avoidance, and
-      introduces ROS2 as the middleware layer. This is where the platform starts to
-      interact with its environment rather than just traverse it.
-      <strong>P3 - Applications</strong> is the open end: sentry patrol, crop monitoring,
-      inspection tasks. Whether any of these gets built depends on what P1 and P2 teach
-      about the platform's real capabilities and limits.
+      the rover autonomous in any real sense.
+      <strong>P2 - Perception</strong> adds a camera and obstacle avoidance, with
+      ROS2 as the middleware. This is where the rover starts to react to its environment
+      instead of just moving through it.
+      <strong>P3 - Applications</strong> is open-ended: sentry patrol, crop monitoring,
+      inspection. Whether any of these gets built depends on what P1 and P2 teach me
+      about the rover's real capabilities.
     </p>
 
     <p>
-      Each branch in the map has at least one dedicated post. The ones already written
-      are linked from the journal. The ones still open are placeholders for work that
-      has not started yet - or that started but is not ready to publish. That gap between
-      the map and the journal is itself part of the documentation.
+      Each branch has at least one dedicated post. The ones already written are linked
+      from the journal. The ones still open are placeholders for work that hasn't
+      started yet - or that started but isn't ready to publish. That gap between the
+      map and the journal is itself part of the documentation.
     </p>
 
   </div>
