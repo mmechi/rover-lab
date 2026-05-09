@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>#02 Drivetrain Sizing - Rover Lab</title>
+<meta name="description" content="From a 10 kg mass budget and a 10 degree slope to the required torque and speed per wheel. Drivetrain sizing for an outdoor 4WD skid-steering rover.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;500;600&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --bg2: #13161e;
+    --bg3: #1a1e28;
+    --border: #232839;
+    --border2: #2e3448;
+    --text: #e8eaf0;
+    --text2: #9ba2bc;
+    --text3: #737a96;
+    --accent: #4f8ef7;
+    --accent2: #1a3a7a;
+    --amber: #f0a940;
+    --green: #3ecf7a;
+    --red: #fb7185;
+    --purple: #c778dd;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Sora', sans-serif;
+    --serif: 'Playfair Display', serif;
+    --r: 6px;
+    --r2: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+  nav {
+    border-bottom: 1px solid var(--border);
+    background: rgba(13,15,20,0.92);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--text3); }
+
+  .nav-back {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text2);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-back:hover { color: var(--text); }
+
+  .post-header {
+    padding: 5rem 0 3rem;
+    border-bottom: 1px solid var(--border);
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .post-eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.25rem;
+  }
+
+  .post-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text3);
+  }
+
+  .post-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 2px 10px;
+    border-radius: 99px;
+    border: 1px solid;
+    color: var(--amber);
+    border-color: rgba(240,169,64,0.35);
+    background: rgba(240,169,64,0.07);
+  }
+
+  .post-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    margin-left: auto;
+  }
+
+  .post-header h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 900;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+
+  .post-header h1 em { font-style: normal; color: var(--accent); }
+
+  .post-intro {
+    font-size: 17px;
+    color: var(--text2);
+    max-width: 720px;
+    line-height: 1.85;
+  }
+
+  .post-body { padding: 3rem 0 2rem; }
+
+  .post-body p {
+    font-size: 17px;
+    color: var(--text2);
+    line-height: 1.9;
+    margin-bottom: 1.5rem;
+    max-width: 720px;
+  }
+
+  .post-body strong { color: var(--text); font-weight: 600; }
+
+  .post-body h2 {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin: 3rem 0 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* callout box */
+  .callout {
+    border: 1px solid var(--border2);
+    border-left: 3px solid var(--accent);
+    background: rgba(79,142,247,0.05);
+    border-radius: var(--r);
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .callout.amber {
+    border-left-color: var(--amber);
+    background: rgba(240,169,64,0.05);
+  }
+
+  .callout p {
+    font-size: 15px !important;
+    color: var(--text2) !important;
+    margin: 0 !important;
+    line-height: 1.75 !important;
+  }
+
+  .callout p + p { margin-top: 0.75rem !important; }
+
+  /* figures */
+  .fig-wrap {
+    margin: 2.5rem 0;
+    border: 1px solid var(--border2);
+    border-radius: var(--r2);
+    background: var(--bg2);
+    overflow: hidden;
+  }
+
+  .fig-wrap img, .fig-wrap object, .fig-wrap embed {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .fig-caption {
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    line-height: 1.6;
+  }
+
+  /* assumption table */
+  .assumption-table {
+    width: 100%;
+    max-width: 720px;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 13px;
+    margin: 2rem 0;
+    border: 1px solid var(--border2);
+    border-radius: var(--r2);
+    overflow: hidden;
+  }
+
+  .assumption-table th {
+    background: var(--bg3);
+    color: var(--text2);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.65rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border2);
+    border-right: 1px solid var(--border);
+  }
+
+  .assumption-table th:last-child { border-right: none; }
+
+  .assumption-table td {
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    color: var(--text2);
+  }
+
+  .assumption-table td:last-child { border-right: none; }
+  .assumption-table tr:last-child td { border-bottom: none; }
+
+  .assumption-table .sym { color: var(--accent); font-style: italic; }
+  .assumption-table .val { color: var(--text); font-weight: 500; }
+  .assumption-table .note { color: var(--text3); font-size: 11px; }
+
+  /* force budget box */
+  .force-budget {
+    max-width: 720px;
+    border: 1px solid var(--border2);
+    border-radius: var(--r2);
+    background: var(--bg2);
+    overflow: hidden;
+    margin: 2rem 0;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  .force-row {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.65rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .force-row:last-child { border-bottom: none; }
+  .force-row.total { background: var(--bg3); border-top: 2px solid var(--border2); }
+
+  .force-sym { color: var(--accent); width: 80px; flex-shrink: 0; font-style: italic; }
+  .force-sym.amber { color: var(--amber); }
+  .force-eq { color: var(--text2); flex: 1; }
+  .force-val { color: var(--text); font-weight: 600; width: 70px; text-align: right; flex-shrink: 0; }
+  .force-val.total { color: var(--green); font-size: 15px; }
+
+  /* result boxes */
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border2);
+    border-radius: var(--r2);
+    overflow: hidden;
+    max-width: 720px;
+    margin: 2rem 0;
+  }
+
+  .result-box {
+    background: var(--bg2);
+    padding: 1.5rem;
+  }
+
+  .result-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 0.5rem;
+  }
+
+  .result-value {
+    font-family: var(--mono);
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--green);
+    line-height: 1.1;
+    margin-bottom: 0.3rem;
+  }
+
+  .result-unit {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text3);
+    margin-left: 4px;
+  }
+
+  .result-margin {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--amber);
+    margin-top: 0.5rem;
+  }
+
+  /* references */
+  .references {
+    margin-top: 3rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .references h3 {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .references ol { padding-left: 1.25rem; }
+
+  .references li {
+    font-size: 13px;
+    color: var(--text3);
+    line-height: 1.7;
+    margin-bottom: 0.5rem;
+    font-family: var(--mono);
+  }
+
+  .references a { color: var(--accent); text-decoration: none; }
+  .references a:hover { text-decoration: underline; }
+
+  .post-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 2rem 0 4rem;
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  .post-nav a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .post-nav a.prev::before { content: '<-'; }
+  .post-nav a.next::after { content: '->'; }
+
+  footer { border-top: 1px solid var(--border); padding: 2rem 0; }
+
+  .footer-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-brand { font-family: var(--mono); font-size: 12px; color: var(--text3); }
+
+  .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+
+  .footer-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text3);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--text2); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-grid-3 { grid-template-columns: repeat(3, 1fr); }
+
+  @media (max-width: 600px) {
+    .result-grid,
+    .result-grid-3 { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 800px) {
+    .result-grid-3 { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">marco<span>.</span>rover_lab<span>()</span></a>
+    <a href="../index.html" class="nav-back">&larr; Back to journal</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="post-header">
+    <p class="post-eyebrow">// build journal - mechanical design</p>
+    <div class="post-meta">
+      <span class="post-num">#02</span>
+      <span class="post-badge">Mechanical</span>
+      <span class="post-date">May 2025</span>
+    </div>
+    <h1>Drivetrain sizing:<br><em>from terrain to torque.</em></h1>
+    <p class="post-intro">
+      With the locomotion concept fixed, the next step is translating it into numbers:
+      how much torque, at what speed, at each wheel. In this post I work through the
+      assumptions and the force budget. Motor selection comes in the next one.
+    </p>
+  </div>
+
+  <div class="post-body">
+
+    <h2>// mass budget</h2>
+
+    <p>
+      The total rover mass is the first number I need for the drivetrain calculation -
+      and at this point I haven't weighed a single component. I started with a
+      sub-system breakdown: four motors with gearbox at ~500 g each → 2 kg. Battery
+      and electronics → 2 kg. Frame, wheels, fasteners → 3 kg. A 3 kg margin for
+      cables, connectors, and the inevitable revision brings the total to
+      <strong>10 kg</strong>.
+    </p>
+
+    <p>
+      It's a first guess, not a measured value - consistent with similar open-source
+      builds at this scale. A 10% overestimate in mass means a 10% overestimate in
+      torque, which is an acceptable margin at this stage. I'll revise it once the
+      BOM is more complete.
+    </p>
+
+    <h2>// design scenario</h2>
+
+    <p>
+      I sized the drivetrain around the worst case I could construct: slope at maximum
+      angle, accelerating from rest, with full rolling resistance - all at the same time.
+      The table collects the inputs.
+    </p>
+
+    <table class="assumption-table">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+          <th>Symbol</th>
+          <th>Value</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Total mass</td>
+          <td class="sym">m</td>
+          <td class="val">10 kg</td>
+          <td class="note">mass budget estimate</td>
+        </tr>
+        <tr>
+          <td>Wheel radius</td>
+          <td class="sym">r</td>
+          <td class="val">100 mm</td>
+          <td class="note">Ø200 mm - obstacle clearance</td>
+        </tr>
+        <tr>
+          <td>Rolling resistance coeff.</td>
+          <td class="sym">C<sub>rr</sub></td>
+          <td class="val">0.10</td>
+          <td class="note">grass / gravel outdoor terrain</td>
+        </tr>
+        <tr>
+          <td>Max slope angle</td>
+          <td class="sym">&alpha;</td>
+          <td class="val">10&deg;</td>
+          <td class="note">typical outdoor terrain</td>
+        </tr>
+        <tr>
+          <td>Linear acceleration</td>
+          <td class="sym">a</td>
+          <td class="val">0.5 m/s&sup2;</td>
+          <td class="note">moderate start from rest</td>
+        </tr>
+        <tr>
+          <td>Target max speed</td>
+          <td class="sym">v</td>
+          <td class="val">3 km/h</td>
+          <td class="note">walking pace for outdoor inspection</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      The 200 mm wheel diameter is larger than strictly necessary for the torque
+      calculation. It's set by a geometric constraint: I need to clear obstacles up to
+      ~80 mm high without grounding out the chassis. A larger wheel also reduces the
+      required output shaft speed, which relaxes the gear ratio - a useful bonus.
+    </p>
+
+    <h2>// rolling resistance model</h2>
+
+    <p>
+      Rolling resistance on deformable terrain is well-studied. The Bekker model [1]
+      gives a physics-based estimate by relating soil sinkage to normal load, using three
+      parameters: k<sub>c</sub> (cohesive modulus), k<sub>&phi;</sub> (friction modulus),
+      and n (sinkage exponent). In practice these require in-situ measurements and vary
+      significantly with moisture content and vegetation density - neither of which I have
+      data for the actual operating site.
+    </p>
+
+    <p>
+      So I used the empirical coefficient C<sub>rr</sub> = 0.10 instead. This matches
+      the range in La Regina et al. [2] for wheeled robots on grass and gravel
+      (Table 7), and it avoids terrain characterisation data I simply don't have.
+      It's conservative compared to a smooth flat surface (C<sub>rr</sub> &asymp; 0.02)
+      but realistic for outdoor use.
+    </p>
+
+    <h2>// force budget</h2>
+
+    <p>
+      Three forces act along the direction of travel in the worst-case scenario.
+      The figure shows the free-body diagram and the reference frames.
+    </p>
+
+    <div class="fig-wrap">
+      <img src="../img/robot_swing_arm_inclined_plane_forces.svg"
+           alt="Free-body diagram of the rover on a 10 degree slope, showing rolling resistance, gravity component and inertia force vectors">
+      <p class="fig-caption">
+        Fig. 1 - Forces acting on the rover on an inclined plane (worst-case scenario).
+        F<sub>r</sub>: rolling resistance. F<sub>&#8214;</sub>: gravity component along the slope.
+        F<sub>a</sub>: inertia force during acceleration. G: centre of mass.
+        Reference frame O-X-Y is fixed; x<sub>g</sub>-y<sub>g</sub> is aligned with the slope.
+      </p>
+    </div>
+
+    <p>
+      The three components, with g = 9.81 m/s&sup2;:
+    </p>
+
+    <div class="force-budget">
+      <div class="force-row">
+        <span class="force-sym">F<sub>r</sub></span>
+        <span class="force-eq">= m &middot; g &middot; cos(&alpha;) &middot; C<sub>rr</sub> = 10 &times; 9.81 &times; cos(10&deg;) &times; 0.10</span>
+        <span class="force-val">9.7 N</span>
+      </div>
+      <div class="force-row">
+        <span class="force-sym amber">F<sub>&#8214;</sub></span>
+        <span class="force-eq">= m &middot; g &middot; sin(&alpha;) = 10 &times; 9.81 &times; sin(10&deg;)</span>
+        <span class="force-val">17.0 N</span>
+      </div>
+      <div class="force-row">
+        <span class="force-sym">F<sub>a</sub></span>
+        <span class="force-eq">= m &middot; a = 10 &times; 0.5</span>
+        <span class="force-val">5.0 N</span>
+      </div>
+      <div class="force-row total">
+        <span class="force-sym">F<sub>total</sub></span>
+        <span class="force-eq">= F<sub>r</sub> + F<sub>&#8214;</sub> + F<sub>a</sub></span>
+        <span class="force-val total">31.7 N</span>
+      </div>
+    </div>
+
+    <p>
+      In practice the rover won't always accelerate at full rate on the steepest slope
+      it will ever see. But combining all three is the right basis for motor sizing -
+      it guarantees enough torque in every real situation, not just the average one.
+    </p>
+
+    <h2>// required torque and speed per wheel</h2>
+
+    <p>
+      Four driven wheels. I'm assuming equal load distribution - in practice, the
+      slope and acceleration both shift weight toward the rear wheels, but the effect
+      is small enough at this scale to ignore for sizing. Each wheel covers one quarter
+      of the total force. The required torque at the hub follows directly:
+    </p>
+
+    <div class="callout">
+      <p>
+        T<sub>wheel</sub> = (F<sub>total</sub> / 4) &times; r = (31.7 / 4) &times; 0.100 = <strong>0.79 N&middot;m per wheel</strong>
+      </p>
+    </div>
+
+    <p>
+      And the required wheel speed from the target linear speed of 3 km/h (0.833 m/s):
+    </p>
+
+    <div class="callout">
+      <p>
+        n<sub>wheel</sub> = v / (2&pi; &middot; r) &times; 60 = 0.833 / (2&pi; &times; 0.100) &times; 60 = <strong>79.5 rpm per wheel</strong>
+      </p>
+    </div>
+
+    <p>
+      These two numbers - 0.79 N&middot;m and 79.5 rpm - are what the drivetrain has
+      to deliver at the wheel hub. They're the input spec for motor selection.
+    </p>
+
+    <div class="result-grid">
+      <div class="result-box">
+        <p class="result-label">Torque / wheel</p>
+        <p class="result-value">0.79 <span class="result-unit">N&middot;m</span></p>
+        <p class="result-margin">slope + acceleration + rolling resistance</p>
+      </div>
+      <div class="result-box">
+        <p class="result-label">Speed / wheel</p>
+        <p class="result-value">79.5 <span class="result-unit">rpm</span></p>
+        <p class="result-margin">v = 3 km/h, r = 100 mm</p>
+      </div>
+    </div>
+
+    <h2>// kinematic chain</h2>
+
+    <p>
+      With torque and speed defined, I need a transmission between the motor shaft
+      and the wheel hub. The figure shows what I chose for Argo v1: a two-stage
+      reduction, planetary then bevel.
+    </p>
+
+    <div class="fig-wrap">
+      <img src="../img/drivetrain-chain.svg"
+           alt="Block diagram showing the two-stage drivetrain: motor with planetary gearbox feeds a custom FDM bevel gear that turns 90 degrees to drive the wheel hub">
+      <p class="fig-caption">
+        Fig. 2 - Kinematic chain for Argo v1. Two stages: a commercial motor+planetary unit
+        (fixed ratio, purchased) and a custom FDM bevel gear (custom ratio, 90° turn).
+        Wheel hub output values (green) are fixed by this post. Intermediate shaft values
+        depend on motor selection - post #03.
+      </p>
+    </div>
+
+    <p>
+      The bevel gear ratio is a design output, not a catalogue selection. Consumer-market
+      planetary gearboxes come in a limited set of fixed ratios - I can't always find the
+      exact reduction I need. The bevel stage fills that gap: it adds the remaining reduction
+      and the 90&deg; direction change the chassis geometry requires. The required total ratio
+      is i = n<sub>motor</sub> / 79.5 - it depends entirely on the motor selected, which is
+      post #03. For motors in this class the realistic range is roughly 20:1 to 75:1: the
+      planetary stage covers most of it, the bevel fills what's left. Tooth counts follow
+      from there, constrained only by FDM process limits.
+    </p>
+
+    <h2>// margins and efficiency</h2>
+
+    <p>
+      The 0.79 N&middot;m figure is the bare minimum at the wheel - no safety factor, no
+      transmission losses. Three corrections bring it to a motor selection spec.
+    </p>
+
+    <p>
+      <strong>Transmission efficiency &eta; = 0.65.</strong> Two gear stages: a consumer
+      planetary gearbox and a custom bevel pair printed in PA6-CF. No measured data exists
+      on FDM bevel mesh efficiency - 0.65 is a conservative estimate. A precision steel
+      stage runs at ~0.97; printed gears on a manually assembled mesh add significant
+      uncertainty. I'll revise this once I can measure it on the bench.
+    </p>
+
+    <p>
+      <strong>Continuous safety factor SF = 1.3.</strong> Applied to the straight-line worst
+      case. Covers unmodelled load variations, terrain irregularities, and the fact that the
+      mass budget is still an estimate.
+    </p>
+
+    <p>
+      <strong>Skid-steering peak factor SF<sub>pk</sub> = 3.</strong> Pivot-turning scrubs all four wheels
+      laterally. The resistance torque depends on lateral friction and track geometry - I'm
+      using 3&times; the straight-line requirement as a conservative estimate for grass and gravel.
+      This is the dimensioning case for peak torque.
+    </p>
+
+    <div class="callout">
+      <p>
+        T<sub>cont</sub> = T<sub>wheel</sub> &times; SF / &eta; = 0.79 &times; 1.3 / 0.65 = <strong>1.58 N&middot;m per wheel</strong>
+      </p>
+    </div>
+
+    <div class="callout">
+      <p>
+        T<sub>peak</sub> = T<sub>wheel</sub> &times; SF<sub>pk</sub> / &eta; = 0.79 &times; 3 / 0.65 = <strong>3.65 N&middot;m per wheel</strong>
+      </p>
+    </div>
+
+    <p>
+      These three numbers are the motor selection spec.
+    </p>
+
+    <div class="result-grid result-grid-3">
+      <div class="result-box">
+        <p class="result-label">T cont / wheel</p>
+        <p class="result-value">1.58 <span class="result-unit">N&middot;m</span></p>
+        <p class="result-margin">SF=1.3 &middot; &eta;=0.65</p>
+      </div>
+      <div class="result-box">
+        <p class="result-label">T peak / wheel</p>
+        <p class="result-value">3.65 <span class="result-unit">N&middot;m</span></p>
+        <p class="result-margin">SF<sub>pk</sub>=3 &middot; &eta;=0.65</p>
+      </div>
+      <div class="result-box">
+        <p class="result-label">Speed / wheel</p>
+        <p class="result-value">79.5 <span class="result-unit">rpm</span></p>
+        <p class="result-margin">v = 3 km/h, r = 100 mm</p>
+      </div>
+    </div>
+
+    <p>
+      The last number to close the motor spec is power. At the wheel hub in the
+      continuous worst case:
+    </p>
+
+    <div class="callout">
+      <p>
+        P<sub>wheel</sub> = T<sub>wheel</sub> &times; &omega; = 0.79 &times; 8.33 &asymp; <strong>6.6 W per wheel</strong> (nominal mechanical output at the hub)
+      </p>
+      <p>
+        P<sub>motor</sub> = T<sub>cont</sub> &times; &omega;<sub>wheel</sub> = 1.58 &times; 8.33 &asymp; <strong>13 W per wheel &mdash; ~53 W total shaft power</strong>
+      </p>
+    </div>
+
+    <p>
+      The gear ratio cancels out: P<sub>motor</sub> = (T<sub>cont</sub> / i) &times; (&omega;<sub>wheel</sub> &times; i) = T<sub>cont</sub> &times; &omega;<sub>wheel</sub>.
+      The 53 W figure already includes SF and transmission losses - it's what I'll use
+      to filter the motor catalogue in the next post. Actual draw from the battery will
+      be higher, divided by motor electrical efficiency (typically 0.7&ndash;0.9).
+      Battery sizing comes later.
+    </p>
+
+    <div class="callout amber">
+      <p>
+        Motor and gearbox selection comes in the next post: T-&omega; curve, operating point,
+        and thermal derating checked against <strong>1.58 N&middot;m continuous</strong>,
+        <strong>3.65 N&middot;m peak</strong>, and <strong>~53 W total shaft power</strong>.
+      </p>
+    </div>
+
+    <div class="references">
+      <h3>// references</h3>
+      <ol>
+        <li>
+          Bekker, M.G. <em>Introduction to Terrain-Vehicle Systems.</em>
+          University of Michigan Press, 1969.
+        </li>
+        <li>
+          La Regina, R. et al. "Design and Experimental Validation of a Wheeled Mobile Robot
+          for Outdoor Applications." <em>Machines</em> 13, 1071 (2025).
+          <a href="https://doi.org/10.3390/machines13121071" target="_blank">doi:10.3390/machines13121071</a>
+        </li>
+      </ol>
+    </div>
+
+  </div><!-- post-body -->
+
+  <div class="post-nav">
+    <a href="01-locomotion-options.html" class="prev">Locomotion selection</a>
+    <a href="#" class="next" style="color:var(--text3);cursor:default;">Motor selection &amp; swing arm</a>
+  </div>
+
+</div><!-- wrap -->
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-brand">marco.rover_lab() - Argo v1 build journal</span>
+    <ul class="footer-links">
+      <li><a href="https://github.com/mmechi/rover-lab" target="_blank">GitHub</a></li>
+      <li><a href="../about.html">About</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="../js/lightbox.js"></script>
+</body>
+</html>

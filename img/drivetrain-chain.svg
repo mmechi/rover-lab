@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 549.04962 370"
+   width="549.04962"
+   height="370"
+   style="font-family:'IBM Plex Mono', monospace"
+   version="1.1"
+   id="svg21"
+   sodipodi:docname="drivetrain-chain.svg"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs21" />
+  <sodipodi:namedview
+     id="namedview21"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.6067568"
+     inkscape:cx="163.0614"
+     inkscape:cy="188.26745"
+     inkscape:window-width="2560"
+     inkscape:window-height="1369"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg21" />
+  <!-- background -->
+  <rect
+     width="549.04962"
+     height="370"
+     fill="#0d0f14"
+     id="rect1"
+     x="0"
+     y="0"
+     style="stroke-width:0.941044" />
+  <!-- ─── Block 1: Motor + Planetary ─── -->
+  <rect
+     x="20"
+     y="55"
+     width="218"
+     height="138"
+     rx="6"
+     fill="#12151c"
+     stroke="#3a7bd5"
+     stroke-width="1.5"
+     id="rect2" />
+  <text
+     x="129"
+     y="78"
+     text-anchor="middle"
+     fill="#3a7bd5"
+     font-size="11px"
+     font-weight="bold"
+     id="text2">MOTOR + PLANETARY</text>
+  <line
+     x1="20"
+     y1="89"
+     x2="238"
+     y2="89"
+     stroke="#232839"
+     stroke-width="1"
+     id="line2" />
+  <text
+     x="30"
+     y="108"
+     fill="#9ba2bc"
+     font-size="10px"
+     id="text3">Commercial unit</text>
+  <text
+     x="30"
+     y="124"
+     fill="#9ba2bc"
+     font-size="10px"
+     id="text4">Fixed catalogue ratio</text>
+  <text
+     x="30"
+     y="142"
+     fill="#737a96"
+     font-size="9px"
+     id="text5">Not all ratios available</text>
+  <text
+     x="30"
+     y="156"
+     fill="#737a96"
+     font-size="9px"
+     id="text6">off the shelf</text>
+  <!-- tag -->
+  <rect
+     x="20"
+     y="196"
+     width="218"
+     height="22"
+     rx="3"
+     fill="#0d1a2e"
+     stroke="#1a3a7a"
+     stroke-width="1"
+     id="rect6" />
+  <text
+     x="129"
+     y="211"
+     text-anchor="middle"
+     fill="#4f8ef7"
+     font-size="9px"
+     id="text7">purchased · fixed ratio</text>
+  <!-- ─── horizontal shaft ─── -->
+  <line
+     x1="238"
+     y1="124"
+     x2="302"
+     y2="124"
+     stroke="#9ba2bc"
+     stroke-width="1.5"
+     stroke-dasharray="5, 3"
+     id="line7" />
+  <polygon
+     points="302,128.5 302,119.5 314,124 "
+     fill="#9ba2bc"
+     id="polygon7" />
+  <!-- ─── Block 2: Bevel Gear ─── -->
+  <rect
+     x="326"
+     y="55"
+     width="175"
+     height="138"
+     rx="6"
+     fill="#12151c"
+     stroke="#f5a623"
+     stroke-width="1.5"
+     id="rect7" />
+  <text
+     x="413"
+     y="78"
+     text-anchor="middle"
+     fill="#f5a623"
+     font-size="11px"
+     font-weight="bold"
+     id="text8">BEVEL GEAR</text>
+  <line
+     x1="326"
+     y1="89"
+     x2="501"
+     y2="89"
+     stroke="#232839"
+     stroke-width="1"
+     id="line8" />
+  <text
+     x="336"
+     y="108"
+     fill="#c8902a"
+     font-size="10px"
+     id="text9">FDM — PA6-CF</text>
+  <text
+     x="336"
+     y="124"
+     fill="#9ba2bc"
+     font-size="10px"
+     id="text10">90° direction change</text>
+  <text
+     x="336"
+     y="140"
+     fill="#9ba2bc"
+     font-size="10px"
+     id="text11">Custom reduction</text>
+  <text
+     x="336"
+     y="156"
+     fill="#737a96"
+     font-size="9px"
+     id="text12">Ratio set by design</text>
+  <!-- 90° corner marker -->
+  <!-- tag -->
+  <rect
+     x="326"
+     y="196"
+     width="175"
+     height="22"
+     rx="3"
+     fill="#1a0e00"
+     stroke="#7a4d10"
+     stroke-width="1"
+     id="rect12" />
+  <text
+     x="413"
+     y="211"
+     text-anchor="middle"
+     fill="#f0a940"
+     font-size="9px"
+     id="text13">designed · custom ratio</text>
+  <!-- ─── vertical shaft (after 90° turn) ─── -->
+  <line
+     x1="413"
+     y1="218"
+     x2="413"
+     y2="270"
+     stroke="#f5a623"
+     stroke-width="1.5"
+     stroke-dasharray="5, 3"
+     id="line13" />
+  <polygon
+     points="418,270 408,270 413,283 "
+     fill="#f5a623"
+     id="polygon13" />
+  <!-- output shaft values (known from this post) -->
+  <!-- ─── Block 3: Wheel Hub ─── -->
+  <rect
+     x="326"
+     y="286"
+     width="175"
+     height="65"
+     rx="6"
+     fill="#12151c"
+     stroke="#888888"
+     stroke-width="1.5"
+     id="rect15" />
+  <text
+     x="413"
+     y="307"
+     text-anchor="middle"
+     fill="#aab4c8"
+     font-size="11px"
+     font-weight="bold"
+     id="text16">WHEEL HUB</text>
+  <line
+     x1="326"
+     y1="315"
+     x2="501"
+     y2="315"
+     stroke="#232839"
+     stroke-width="1"
+     id="line16" />
+  <text
+     x="413"
+     y="331"
+     text-anchor="middle"
+     fill="#737a96"
+     font-size="9px"
+     id="text17">Ø 200 mm</text>
+  <text
+     x="413"
+     y="345"
+     text-anchor="middle"
+     fill="#3ecf7a"
+     font-size="9px"
+     id="text18">79.5 rpm · 0.79 N·m</text>
+  <!-- ─── total ratio (bottom-left) ─── -->
+  <rect
+     x="20"
+     y="258"
+     width="290"
+     height="62"
+     rx="4"
+     fill="#12151c"
+     stroke="#2e3448"
+     stroke-width="1"
+     id="rect18" />
+  <text
+     x="165"
+     y="278"
+     text-anchor="middle"
+     fill="#6c8ebf"
+     font-size="10px"
+     id="text19">Total reduction ratio</text>
+  <text
+     x="165"
+     y="298"
+     text-anchor="middle"
+     fill="#e8eaf0"
+     font-size="12px"
+     font-weight="bold"
+     id="text20">i = i_plan × i_bevel</text>
+  <text
+     x="165"
+     y="313"
+     text-anchor="middle"
+     fill="#737a96"
+     font-size="9px"
+     id="text21">= n_motor / 79.5 rpm (post #03)</text>
+</svg>
